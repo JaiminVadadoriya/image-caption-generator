@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>AI Image Caption Generator</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>AI Image Caption Generator</h1>
+    </header>
+
+    <section class="upload-section">
+      <form id="image-upload-form" enctype="multipart/form-data">
+        <input type="file" id="image-upload" name="image" accept="image/*" required />
+        <button type="submit">Upload and Generate Caption</button>
+      </form>
+    </section>
+
+    <section class="image-display">
+      <canvas id="image-canvas" width="500" height="400"></canvas>
+    </section>
+
+    <section class="caption-section">
+      <h2>Generated Caption</h2>
+      <p id="caption-text">No image uploaded yet.</p>
+    </section>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+
+</html>
