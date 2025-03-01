@@ -15,6 +15,7 @@
       <h1>AI Image Caption Generator</h1>
     </header>
 
+    <!-- Upload Section -->
     <section class="upload-section">
       <form id="image-upload-form" enctype="multipart/form-data">
         <input type="file" id="image-upload" name="image" accept="image/*" required />
@@ -22,14 +23,24 @@
       </form>
     </section>
 
+    <!-- Image Display and Canvas Section -->
     <section class="image-display">
       <canvas id="image-canvas" width="500" height="400"></canvas>
+      <img id="image-preview" src="" alt="Image Preview" style="display: none; width: 500px; height: 400px;" />
     </section>
 
+    <!-- Loading Spinner and Caption Section -->
     <section class="caption-section">
       <h2>Generated Caption</h2>
       <p id="caption-text">No image uploaded yet.</p>
     </section>
+
+    <!-- Loading Spinner -->
+    <div id="loading-spinner" class="loading-spinner" style="display: none;">
+      <div class="spinner"></div>
+      <p>Processing...</p>
+    </div>
+
   </div>
 
   <script src="js/script.js"></script>

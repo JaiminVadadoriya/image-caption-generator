@@ -1,51 +1,59 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const form = document.getElementById('image-upload-form');
-  const fileInput = document.getElementById('image-upload');
-  const canvas = document.getElementById('image-canvas');
-  const captionText = document.getElementById('caption-text');
-  const ctx = canvas.getContext('2d');
+document.getElementById("image-upload-form").addEventListener("submit", function (event) {
+  event.preventDefault();
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault(); // Prevent form submission
-
-    const file = fileInput.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = async function (event) {
-        const img = new Image();
-        img.onload = function () {
-          // Clear previous canvas and draw new image
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-          // Send the image to the server for captioning
-          uploadImage(file);
-        };
-        img.src = event.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-  });
-
-  async function uploadImage(file) {
-    const formData = new FormData();
-    formData.append('image', file);
-
-    try {
-      const response = await fetch('upload_image.php', {
-        method: 'POST',
-        body: formData
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        captionText.textContent = data.caption || "No caption generated.";
-      } else {
-        captionText.textContent = "Error generating caption.";
-      }
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      captionText.textContent = "Failed to upload image.";
-    }
+  // Get the file input and selected file
+  const fileInput = document.getElementById("image-upload");
+  const file = fileInput.files[0];
+  
+  if (!file) {
+      alert("Please select an image to upload.");
+      return;
   }
+
+  // Show the loading spinner
+  document.getElementById("loading-spinner").style.display = "flex";
+
+  // Preview the image in the canvas
+  const reader = new FileReader();
+  reader.onload = function (e) {
+      const imgElement = new Image();
+      imgElement.src = e.target.result;
+      
+      imgElement.onload = function () {
+          // Display the image in canvas
+          const canvas = document.getElementById("image-canvas");
+          const ctx = canvas.getContext("2d");
+          ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear any previous content
+          ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
+
+          // Optionally, you can hide the canvas and show an image preview for better quality display
+          document.getElementById("image-preview").src = e.target.result;
+          document.getElementById("image-preview").style.display = "block";
+      };
+  };
+  reader.readAsDataURL(file);
+
+  // Prepare FormData to send image to PHP backend
+  const formData = new FormData();
+  formData.append("image", file);
+
+  // Send the image to the backend via POST
+  fetch("upload_image.php", {
+      method: "POST",
+      body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+      document.getElementById("loading-spinner").style.display = "none";  // Hide the loading spinner
+      if (data.success) {
+          document.getElementById("caption-text").textContent = data.caption;
+      } else {
+          document.getElementById("caption-text").textContent = "Error: " + data.error;
+      }
+  })
+  .catch(error => {
+      document.getElementById("loading-spinner").style.display = "none";  // Hide the loading spinner
+      console.error('Error:', error);
+      document.getElementById("caption-text").textContent = "Error uploading image.";
+  });
 });

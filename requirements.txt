@@ -1,0 +1,4 @@
+requests>=2.26.0
+Pillow>=8.0.0
+transformers>=4.11.0
+torch>=1.10.0
